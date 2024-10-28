@@ -14,8 +14,8 @@
         </aside>
 
         <main class="content">
-            <addStores v-if="view === 'create'" :stores="stores" @update-stores="updateStores" />
-            <manageStores v-if="view === 'manage'" :stores="stores" @update-stores="updateStores" @change-view="view = $event"/>
+            <AddStores v-if="view === 'create'" :stores="stores" @update-stores="updateStores" />
+            <ManageStores v-if="view === 'manage'" :stores="stores" @update-stores="updateStores" @change-view="view = $event"/>
             <SellerProduct v-if="view === 'SellerProduct'" @open-create-product="openCreateProductModal" />
   
         </main>
@@ -23,13 +23,13 @@
 </template>
 
 <script>
-import addStores from "../../components/controlPanelComponents/addStores.vue";
-import manageStores from "../../components/controlPanelComponents/manageStores.vue";
+import AddStores from "@/components/ControlPanelComponets/AddStores.vue";
+import ManageStores from "@/components/ControlPanelComponets/ManageStores.vue";
 import SellerProduct from "@/components/MenuComponents/SellerProductlist/SellerProduct.vue";
 
 
 export default {
-    components: { addStores, manageStores, SellerProduct },
+    components: { AddStores, ManageStores, SellerProduct },
     data() {
         return {
             view: "create",

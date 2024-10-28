@@ -4,7 +4,7 @@ import SesionView from '../views/LoginViews/SesionView.vue'
 import MainLayout from '../components/LayoutComponents/MainLayout.vue'
 import MenuView from '../views/LoginViews/MenuView.vue'
 import CartView from '@/views/LoginViews/CartView.vue'
-import controlPanel from '@/components/controlPanelComponents/controlPanel.vue'
+import sellerDashboard from '@/views/LoginViews/sellerDashboard.vue'
 
 
 import TicketsView from '../views/LoginViews/TicketsView.vue'
@@ -60,9 +60,9 @@ const router = createRouter({
         component: ChatView
       },
       {
-            path: '/controlPanel',
-            name: 'controlPanel',
-            component: controlPanel
+            path: '/sellerDashboard',
+            name: 'sellerDashboard',
+            component: sellerDashboard
       },
 
     ]
