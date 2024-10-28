@@ -32,32 +32,37 @@ export default {
         updateStores: Function,
     },
     methods: {
-        editStore(index) {// el codigo que esta aqui es solo visual, es decir, todavia no esta funcionando con la base porque eso nos toca en la tercera iteracion
+        editStore(index) {
             const newName = prompt("Nuevo nombre:", this.stores[index].name);
             const newDescription = prompt(
                 "Nueva descripción:",
                 this.stores[index].description
             );
+
             if (newName && newDescription) {
-                this.stores[index].name = newName;
-                this.stores[index].description = newDescription;
+                // con estos cambios no deberia de marcar errores
+                this.stores.splice(index, 1, {
+                    ...this.stores[index], 
+                    name: newName,
+                    description: newDescription,
+                });
                 alert("¡Tienda actualizada!");
             }
         },
         deleteStore(index) {// el codigo que esta aqui es solo visual, es decir, todavia no esta funcionando con la base porque eso nos toca en la tercera iteracion
             if (confirm("¿Seguro que deseas eliminar esta tienda?")) {
-                this.$emit("update-stores", index, true); 
+                this.$emit("update-stores", index, true);
                 alert("Tienda eliminada.");
             }
         },
         manageProducts(index) {
             alert(`Gestionando productos de ${this.stores[index].name}`);
             this.$emit("change-view", "SellerProduct");
-            
+
         },
         generateTopSellingReport(index) {
             alert(`Generando reporte de productos más vendidos para ${this.stores[index].name}`);
-            
+
 
         },
     },
