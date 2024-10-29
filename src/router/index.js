@@ -1,23 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import ReportComponent from '../components/controlPanelComponents/ReportComponents.vue'; // O usando la ruta relativa
 
 import SesionView from '../views/LoginViews/SesionView.vue'
 import MainLayout from '../components/LayoutComponents/MainLayout.vue'
 import MenuView from '../views/LoginViews/MenuView.vue'
 import CartView from '@/views/LoginViews/CartView.vue'
-import controlPanel from '@/components/controlPanelComponents/controlPanel.vue'
-
-
 import TicketsView from '../views/LoginViews/TicketsView.vue'
 import ChatView from '../views/LoginViews/ChatView.vue'
 import CreateTicketView from '../views/LoginViews/CreateTicketView.vue'
 import UpdateTicket from '@/components/TicketsComponents/UpdateTicket.vue'
+import sellerDashboard from '@/views/LoginViews/sellerDashboard.vue'
+import ProductList from '@/components/MenuComponents/ListOfProducts&ProductDetails/ProductList.vue';
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+   
     
+    {
+      path: '/tickets',
+      name: 'Tickets',
+      component: TicketsView
+    },
       {
+        
         path: '/',
         name: 'sesion', 
         component: SesionView
@@ -26,6 +33,11 @@ const router = createRouter({
         path: '/Main',
         component: MainLayout,
         children: [
+          {
+            path: '/products',
+            name: 'ProductList',
+            component: ProductList
+          },
           {
             path: '/Menu',
             name: 'Menu',
@@ -60,10 +72,16 @@ const router = createRouter({
         component: ChatView
       },
       {
-            path: '/controlPanel',
-            name: 'controlPanel',
-            component: controlPanel
+            path: '/sellerDashboard', 
+            name: 'sellerDashboard', 
+            component: sellerDashboard
       },
+        {
+      path: '/report/:storeId',
+      name: 'ReportComponent',
+      component: ReportComponent,
+      props: true,
+    }
 
     ]
 })
