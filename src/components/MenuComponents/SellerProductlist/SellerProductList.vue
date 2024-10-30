@@ -47,6 +47,7 @@
     />
 
     <!-- Modal para crear producto -->
+    <!-- Modal para crear producto -->
     <CreateProduct
       v-if="showCreateModal"
       :showModal="showCreateModal"
@@ -54,6 +55,13 @@
       @create="addNewProduct"
     />
 
+    <DeleteConfirmationModal
+      v-if="showDeleteModal"
+      :showModal="showDeleteModal"
+      :productId="deleteProductId"
+      @close="cancelDelete"
+      @confirm="deleteProduct"
+    />
     <DeleteConfirmationModal
       v-if="showDeleteModal"
       :showModal="showDeleteModal"
@@ -69,19 +77,26 @@ import EditProductModal from './EditProductModal.vue';
 import CreateProduct from './CreateProduct.vue';
 import DeleteConfirmationModal from './DeleteConfirmationModal.vue';
 import axios from 'axios';
+import DeleteConfirmationModal from './DeleteConfirmationModal.vue';
+import axios from 'axios';
 
 export default {
   components: {
     EditProductModal,
     CreateProduct,
     DeleteConfirmationModal
+    CreateProduct,
+    DeleteConfirmationModal
   },
   data() {
     return {
       localProducts: [...this.products], // Copia local de products
+      localProducts: [...this.products], // Copia local de products
       showEditModal: false,
       showCreateModal: false,
+      showCreateModal: false,
       showDeleteModal: false,
+      deleteProductId: null, // ID del producto a eliminar
       deleteProductId: null, // ID del producto a eliminar
       selectedProduct: null,
     };
@@ -175,6 +190,7 @@ export default {
     cancelDelete() {
       this.showDeleteModal = false;
       this.deleteProductId = null;
+      this.deleteProductId = null;
     },
     async deleteProduct(productId) {
       try {
@@ -215,6 +231,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .product-list-container {

@@ -87,6 +87,8 @@ export default {
   props: {
     product: Object,
     categories: Array, // Recibimos las categorías desde el padre
+    product: Object,
+    categories: Array, // Recibimos las categorías desde el padre
   },
   data() {
     return {
