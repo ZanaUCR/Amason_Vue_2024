@@ -13,6 +13,9 @@ import sellerDashboard from '@/views/LoginViews/sellerDashboard.vue'
 import ProductList from '@/components/MenuComponents/ListOfProducts&ProductDetails/ProductList.vue';
 import AdminTicket from '@/components/TicketsComponents/AdminTicket.vue';
 import CheckOut from '@/components/CartComponents/CheckOut.vue';
+import ReturnPanelView from '@/views/LoginViews/ReturnPanelView.vue';
+import ReturnAdminPanelView from '@/views/LoginViews/ReturnAdminPanelView.vue';
+import ReturnRequestView from '@/views/LoginViews/ReturnRequestView.vue';
 import ReviewRatingsView from '@/views/LoginViews/ReviewRatingsView.vue';
 import WriteReviewView from '@/views/LoginViews/WriteReviewView.vue';
 import OrdersList from '@/components/OrderComponents/OrdersList.vue';
@@ -64,6 +67,23 @@ const router = createRouter({
             name: 'Tickets',
             component: TicketsView
           },
+          {
+            path: '/return-panel',
+            name: 'ReturnPanel',
+            component: ReturnPanelView
+          },
+          {
+            path: '/return-admin-panel',
+            name: 'ReturnAdminPanel',
+            component: ReturnAdminPanelView
+          },
+          {
+            path: '/return-request/:orderId',
+            name: 'ReturnRequestView',
+            component: ReturnRequestView,
+            props: true
+          },
+
           {
             path: '/create-ticket',
             name: 'CreateTicket',
