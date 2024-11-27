@@ -2,188 +2,182 @@
   <div class="reviews-container">
     <!-- Sección de la barra lateral del producto -->
     <div class="product-sidebar">
-      <!-- Cuadro de información del producto -->
-      <div class="product-info">
-        <img src="@/assets/images/laptop-image.jpg" alt="Laptop Thunderbolt 15" class="product-image" />
-        <h3 class="product-name">Laptop Thunderbolt 15</h3>
-        <p class="product-price">₡ 534.000,00</p>
+      <!-- Bloque del producto -->
+      <div class="product-block">
+        <img :alt="productName" class="product-image" />
+        <h3 class="product-name">{{ productName }}</h3>
+        <p class="product-price">₡ {{ productPrice }}</p>
         <button class="cart-button">🛒</button>
       </div>
 
-      <!-- Botón para escribir una opinión -->
-      <button class="opinion-button" @click="navigateToWriteReview">Escribir mi opinión del producto</button>
+      <!-- Botón para escribir opinión -->
+      <router-link :to="{ path: '/reviews-write', query: { product_id: id } }">
+        <button class="opinion-button">Escribir mi opinión del producto</button>
+      </router-link>
 
-      <!-- Cuadro de calificación general -->
-      <div class="rating-summary">
-        <h4>Calificación general</h4>
-        <p class="average-rating">4.1 de 5</p>
-        <div class="stars-container">
-          <div class="stars">★★★★★</div>
-          <p>55%</p>
-        </div>
-        <div class="stars-container">
-          <div class="stars">★★★★☆</div>
-          <p>19%</p>
-        </div>
-        <div class="stars-container">
-          <div class="stars">★★★☆☆</div>
-          <p>14%</p>
-        </div>
-        <div class="stars-container">
-          <div class="stars">★★☆☆☆</div>
-          <p>5%</p>
-        </div>
-        <div class="stars-container">
-          <div class="stars">★☆☆☆☆</div>
-          <p>8%</p>
-        </div>
-      </div>
     </div>
 
     <!-- Lista de opiniones -->
     <div class="reviews-list">
-      <div class="review-card">
-        <div class="review-header">
-          <img src="@/assets/images/user-avatar.jpg" alt="Avatar" class="user-avatar" />
-          <div class="user-info">
-            <h5 class="user-name">Rebecca D. Condoriano</h5>
-            <div class="rating">★★★★☆</div>
-            <p class="review-date">20 de septiembre 2024</p>
+      <!-- Menú desplegable -->
+      <div class="filter-dropdown">
+        <select v-model="selectedFilter">
+          <option value="featured">Opiniones destacadas</option>
+          <option value="recent">Más recientes</option>
+        </select>
+      </div>
+
+      <!-- Lista dinámica de reseñas -->
+      <div v-if="reviews.length > 0">
+        <div v-for="review in filteredReviews" :key="review.id" class="review-card">
+          <div class="review-header">
+            <div class="user-info">
+              <h5 class="user-name">{{ review.user_name }}</h5>
+              <div class="rating">
+                <span v-for="n in review.calification" :key="n" class="star">⭐</span>
+              </div>
+              <p class="review-date">{{ formatDate(review.created_at || 'Fecha no disponible') }}</p>
+            </div>
+          </div>
+          <p class="review-text">{{ review.comment }}</p>
+          <div class="review-actions">
+            <button class="useful-button">Útil</button>
+            <button class="report-button">Reportar</button>
           </div>
         </div>
-        <p class="review-text">
-          Buscaba una pc que me hiciera todos los trabajos universitarios y esta fue la ideal.
-        </p>
-        <div class="review-actions">
-          <button class="useful-button">Útil</button>
-          <button class="report-button">Reportar</button>
-        </div>
       </div>
-      <!-- Puedes añadir más opiniones aquí -->
+
+      <!-- Mensaje cuando no hay reseñas -->
+      <div v-else>
+        <p>No hay reseñas disponibles para este producto.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  methods: {
-    navigateToWriteReview() {
-      // Redirige a la vista de escritura de opiniones
-      this.$router.push("/reviews-write");
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
     }
+  },
+
+  data() {
+    return {
+      selectedFilter: "featured",
+      reviews: [],
+      product: {},
+      productName: '',
+      productPrice: '',
+    };
+  },
+
+  computed: {
+    filteredReviews() {
+      return [...this.reviews].sort((a, b) =>
+        this.selectedFilter === 'featured'
+          ? b.calification - a.calification
+          : new Date(b.created_at || 0) - new Date(a.created_at || 0)
+      );
+    }
+  },
+  methods: {
+    formatDate(isoDate) {
+      const date = new Date(isoDate);
+
+      return new Intl.DateTimeFormat('es-CR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }).format(date);
+    }
+  },
+
+  async created() {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/reviews/showReviews/${this.id}`);
+      this.reviews = response.data.reviews || [];
+
+      console.log('Reviews cargadas:', this.reviews);
+    } catch (error) {
+      console.error('Error al cargar las reseñas:', error);
+      this.reviews = [];
+    }
+
+    this.productName = this.$route.query.name;
+    this.productPrice = this.$route.query.price;
   }
 };
 </script>
 
 <style scoped>
-/* Estilos del contenedor principal */
+/* Los estilos se mantienen igual */
 .reviews-container {
   display: flex;
   justify-content: space-between;
   padding: 20px;
 }
 
-/* Estilos de la barra lateral del producto */
 .product-sidebar {
   width: 30%;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  justify-content: flex-start;
   align-items: center;
-  background-color: #f7f7f7;
-  padding: 20px;
-  border-radius: 8px;
 }
 
-/* Información del producto */
-.product-info {
+.product-block {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
   text-align: center;
-  margin-bottom: 20px;
+  transform: scale(0.8);
+  width: 80%;
 }
 
 .product-image {
+  transform: scale(0.8);
   width: 100%;
-  max-width: 200px;
-  border-radius: 8px;
+  height: auto;
 }
 
-.product-name {
-  font-size: 1.2em;
-  margin: 10px 0;
-}
-
-.product-price {
-  font-size: 1.1em;
-  color: #555;
-}
-
-.cart-button {
-  background-color: #ff9900;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1em;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.cart-button:hover {
-  background-color: #e68a00;
-}
-
-/* Botón para escribir una opinión */
 .opinion-button {
   background-color: #0073e6;
-  color: white;
+  color: #fff;
+  padding: 10px;
   border: none;
-  padding: 10px 20px;
-  font-size: 1em;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
+  margin-top: -20px;
+  align-self: center;
 }
 
-.opinion-button:hover {
-  background-color: #005bb5;
-}
-
-/* Resumen de calificaciones */
-.rating-summary {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.average-rating {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.stars-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 5px;
-}
-
-.stars {
-  color: #ffcc00;
-  font-size: 1.2em;
-}
-
-/* Lista de opiniones */
 .reviews-list {
   width: 65%;
 }
 
-.review-card {
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
+.filter-dropdown select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   margin-bottom: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .review-header {
@@ -192,59 +186,27 @@ export default {
   margin-bottom: 10px;
 }
 
-.user-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
 .user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-name {
-  font-weight: bold;
-  margin: 0;
-}
-
-.rating {
-  color: #ffcc00;
-  font-size: 1em;
-}
-
-.review-date {
-  font-size: 0.9em;
-  color: #777;
-}
-
-.review-text {
-  margin: 15px 0;
-  font-size: 1em;
-  color: #333;
+  flex-grow: 1;
 }
 
 .review-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
 }
 
-.useful-button, .report-button {
+.useful-button,
+.report-button {
   background-color: #f0f0f0;
   border: none;
   padding: 8px 12px;
-  font-size: 0.9em;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.useful-button:hover {
-  background-color: #d9d9d9;
-}
-
+.useful-button:hover,
 .report-button:hover {
-  background-color: #f9dcdc;
+  background-color: #e0e0e0;
 }
 </style>
