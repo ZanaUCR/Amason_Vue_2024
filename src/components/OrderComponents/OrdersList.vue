@@ -191,6 +191,10 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 5px;
   z-index: 1000;
+  right: 0; /* Alinea el menú a la derecha del contenedor */
+  min-width: 150px; /* Asegura un ancho mínimo para el menú */
+  max-width: 90vw; /* Limita el ancho máximo al 90% del ancho de la ventana */
+  overflow-x: hidden;
 }
 
 .dropdown-item {
@@ -203,11 +207,20 @@
   display: block;
   text-align: left;
   width: 100%;
+  transition: background-color 0.3s ease; /* Añade una transición para suavizar el cambio de color */
 }
 
 .dropdown-item:hover {
   background-color: #e09b0a;
 }
+
+@media (max-width: 600px) {
+  .dropdown-item {
+    font-size: 14px; /* Ajusta el tamaño de fuente para pantallas pequeñas */
+    padding: 8px; /* Reduce el padding para pantallas pequeñas */
+  }
+}
+
 .menu-view {
   
   flex-direction: column;

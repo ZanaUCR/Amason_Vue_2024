@@ -7,7 +7,7 @@
         <!-- Formulario solo se muestra si se ha seleccionado una orden -->
         <div class="form-group">
           <label for="order-package">Orden o Paquete</label>
-          <select v-model="ticket.orderPackage" class="form-input" required v-if="orders.length > 0">
+          <select v-model="ticket.orderPackage" class="form-input" v-if="orders.length > 0">
             <option value="" disabled selected>Selecciona una opción</option>
             <option v-for="order in orders" :key="order.id" :value="order.order_id">
               Orden: {{ order.order_id }}
@@ -114,7 +114,8 @@ export default {
         const formData = new FormData();
 
         // Asignar los campos del formulario al FormData
-        formData.append('order_package', this.ticket.orderPackage); // Corregir el nombre
+        const orderPackage = this.ticket.orderPackage || "No Aplica"; // Asigna "No Aplica" si no se selecciona nada
+        formData.append('order_package', orderPackage); // Corregir el nombre
         formData.append('claim_type', this.ticket.category); // Corregir el nombre
         formData.append('subject', this.ticket.subject);
         formData.append('description', this.ticket.description);
