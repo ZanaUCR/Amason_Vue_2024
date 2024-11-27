@@ -37,7 +37,7 @@
   
         try {
           const response = await api.put(`/order-return/${this.returnId}`, {
-            status: this.actionType === 'accept' ? 'approved' : 'rejected',
+            status: this.actionType === 'aceptada' ? 'aprobada' : 'rechazada',
             admin_notes: this.adminNotes
           }, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

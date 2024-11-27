@@ -191,7 +191,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 5px;
   z-index: 1000;
-  right: 0; /* Alinea el menú a la derecha del contenedor */
+   /* Alinea el menú a la derecha del contenedor */
   min-width: 150px; /* Asegura un ancho mínimo para el menú */
   max-width: 90vw; /* Limita el ancho máximo al 90% del ancho de la ventana */
   overflow-x: hidden;
