@@ -15,7 +15,7 @@
             <img :src="producto.product_image" alt="Imagen del producto" class="product-image" />
             <h4 class="producto-name">{{ producto.product_name }}</h4>
             <p class="producto-price">₡ {{ producto.product_price }}</p>
-            <p v-if="producto.discount" class="original-price">
+            <p v-if="producto.product_discount" class="original-price">
               Precio Original: ₡ {{ calculateOriginalPrice(producto) }}
             </p>
 
@@ -73,6 +73,7 @@ export default {
           product_name: item.name,
           product_price: item.price,
           product_stock: item.stock,
+          product_discount: item.discount,
           product_image: item.images[0]?.image_path,
           isAdding: false // Añadir la propiedad isAdding a cada producto
         };
@@ -100,7 +101,7 @@ export default {
     },
 
     calculateOriginalPrice(producto) {
-      return (producto.product_price / (1 - producto.discount / 100)).toFixed(2);
+      return (producto.product_price / (1 - producto.product_discount / 100)).toFixed(2);
     },
     prevProduct() {
       this.currentIndex =
