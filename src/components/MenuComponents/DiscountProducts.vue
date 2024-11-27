@@ -8,31 +8,28 @@
         class="product-card"
       >
         <div class="image-container">
-          <img
-            :src="product.images[0]?.image_path || 'placeholder.jpg'"
-            alt="Imagen del producto"
-            class="product-image"
-          />
+          <img :src="product.product_image" alt="Imagen del producto" class="product-image" />
           <span class="discount-badge">
-            {{ product.discount }}% off
+            {{ product.product_discount }}% off
           </span>
         </div>
         <div class="product-details">
-          <h4 class="product-name">{{ product.name }}</h4>
-          <p class="price">Precio: ${{ product.price }}</p>
+          <h4 class="product-name">{{ product.product_name }}</h4>
+          <p class="price">Precio: ${{ product.product_price }}</p>
           <p class="original-price">Precio Original: ${{ calculateOriginalPrice(product) }}</p>
         </div>
+        <!-- Botón de agregar producto al carrito -->
         <i
-        v-if="isAdding"
-        class="fa-solid fa-spinner fa-spin-pulse fa-2x"
-        :style="{ cursor: 'not-allowed' }"
-      ></i>
-      <i
-        v-else
-        @click="addProduct(product)"
-        class="fas fa-cart-plus fa-2x"
-        :style="{ cursor: 'pointer' }"
-      ></i>
+          v-if="product.isAdding"
+          class="fa-solid fa-spinner fa-spin-pulse fa-2x"
+          :style="{ cursor: 'not-allowed' }"
+        ></i>
+        <i
+          v-else
+          @click="addProduct(product)"
+          class="fas fa-cart-plus fa-2x"
+          :style="{ cursor: 'pointer' }"
+        ></i>
       </div>
     </div>
   </div>
@@ -40,6 +37,7 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -47,28 +45,25 @@ export default {
       products: [], // Almacenaremos los productos aquí
     };
   },
-  methods: {
-    calculateOriginalPrice(product) {
-      return (product.price / (1 - product.discount / 100)).toFixed(2);
-    },
-    async addProduct(product) {
-      this.isAdding = true; 
-      try {
-        await this.addProductToCart(product);
-      } catch (error) {
-        console.error('Error adding product to cart:', error);
-      } finally {
-        this.isAdding = false; 
-      }
-    },
-  },
+  
   async mounted() {
     try {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/recommendationByDiscount"
       );
       if (response.data && Array.isArray(response.data)) {
-        this.products = response.data;
+        this.products = response.data.map(item => {
+        return {
+          product_description: item.description,
+          product_id: item.product_id,
+          product_name: item.name,
+          product_price: item.price,
+          product_stock: item.stock,
+          product_discount: item.discount,
+          product_image: item.images[0]?.image_path,
+          isAdding: false // Añadir la propiedad isAdding a cada producto
+        };
+      });
       } else {
         console.error("No se encontraron productos en descuento.");
       }
@@ -76,10 +71,34 @@ export default {
       console.error("Error al obtener productos con descuento:", error);
     }
   },
+  methods: {
+    ...mapActions("cart", ["addProductToCart"]),
+    
+    calculateOriginalPrice(product) {
+      return (product.product_price / (1 - product.product_discount / 100)).toFixed(2);
+    },
+    
+    async addProduct(product) {
+  const index = this.products.findIndex(p => p.product_id === product.product_id);
+  if (index === -1) return; // Verifica que el producto exista en la lista.
+
+  this.products[index].isAdding = true; // Activa el spinner para este producto.
+
+  try {
+    await this.addProductToCart(product); // Realiza la acción de agregar al carrito.
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
+  } finally {
+    this.products[index].isAdding = false; // Desactiva el spinner tras completar la acción.
+  }
+}
+
+  },
 };
 </script>
 
 <style scoped>
+/* Estilos no modificados del original */
 .discount-products {
   margin-top: 20px;
   text-align: center;
@@ -95,15 +114,15 @@ export default {
 
 .discount-products-container {
   display: flex;
-  flex-wrap: nowrap; /* Para simular un carrusel */
-  overflow-x: auto; /* Habilita el desplazamiento horizontal */
+  flex-wrap: nowrap;
+  overflow-x: auto;
   padding: 20px;
   gap: 20px;
 }
 
 .product-card {
   width: 250px;
-  min-width: 250px; /* Garantiza tamaño mínimo */
+  min-width: 250px;
   border: 1px solid #ccc;
   border-radius: 10px;
   background: #fff;
