@@ -9,8 +9,8 @@
         <div v-for="(producto, index) in displayedProducts" :key="producto.product_id"
           :class="['producto-card', index === 1 ? 'current' : '']">
           <div class="producto-card-content">
-            <div class="discount-badge" v-if="producto.discount && index === 1">
-              {{ producto.discount }}% off
+            <div class="discount-badge" v-if="producto.product_discount && index === 1">
+              {{ producto.product_discount }}% off
             </div>
             <img :src="producto.product_image" alt="Imagen del producto" class="product-image" />
             <h4 class="producto-name">{{ producto.product_name }}</h4>
@@ -174,7 +174,7 @@ export default {
 
 .discount-badge {
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 10px;
   background-color: #ff4500;
   color: white;
