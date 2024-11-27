@@ -214,3 +214,60 @@
     min-height: 66vh;
   }
   </style>
+  <style scoped>
+  /* ... código existente ... */
+  
+  @media (max-width: 768px) {
+    .main-container {
+      padding: 10px;
+    }
+  
+    .header h2 {
+      font-size: 1.5rem;
+    }
+  
+    .return-table th, .return-table td {
+      padding: 10px;
+      font-size: 0.9rem;
+    }
+  
+    .btn {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+  
+    .header-actions {
+      flex-direction: column;
+    }
+  
+    .return-table thead {
+      display: none;
+    }
+  
+    .return-table tr {
+      display: block;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  
+    .return-table td {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 5px 10px;
+      text-align: right;
+    }
+  
+    .return-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #34495e;
+      text-align: left;
+      margin-right: 10px;
+    }
+  }
+  
+  /* ... código existente ... */
+  </style>

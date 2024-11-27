@@ -1,4 +1,5 @@
 <template>
+  <div class="menu-view">
   <div class="background"></div>
   <div class="chat-container">
     <div class="chat-header">
@@ -32,6 +33,7 @@
     <div class="footer1">
       <button @click="submitTicket" class="btn-update">Actualizar</button>
     </div>
+  </div>
   </div>
 </template>
 
@@ -305,6 +307,10 @@ export default {
 
   .btn-update {
     font-size: 0.95rem;
+  }
+  .menu-view {
+    flex-direction: column;
+    min-height: 66vh;
   }
 }
 </style>

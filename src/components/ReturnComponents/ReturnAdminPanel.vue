@@ -200,3 +200,140 @@ export default {
   min-height: 66vh;
 }
 </style>
+<style scoped>
+/* Reutiliza los estilos de TicketComponent.vue */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; 
+  background-color: #91ebff;
+  background: linear-gradient(to top, #e2e2e2, #e8faff);
+}
+
+.main-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  /* Añadir media query para responsividad */
+  @media (max-width: 768px) {
+    padding: 10px;
+    margin: 20px auto;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-size: 2rem;
+  color: #34495e;
+  margin-bottom: 10px;
+  /* Ajustar tamaño de fuente para pantallas pequeñas */
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.return-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  /* Hacer la tabla más responsiva */
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+}
+
+.return-table th,
+.return-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  /* Ajustar padding para pantallas pequeñas */
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+}
+
+.return-table th {
+  background-color: #00aed5;
+  color: white;
+  font-weight: bold;
+}
+
+.return-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn {
+  padding: 8px 12px;
+  font-size: 1rem;
+  background-color: #00aed5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* Ajustar tamaño de botón para pantallas pequeñas */
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+
+.btn-accept {
+  background-color: #27ae60;
+}
+
+.btn-accept:hover {
+  background-color: #1e8449;
+}
+
+.btn-cancel {
+  background-color: #e74c3c;
+}
+
+.btn-cancel:hover {
+  background-color: #c0392b;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #34495e;
+  margin-top: 50px;
+  /* Ajustar tamaño de fuente para pantallas pequeñas */
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+}
+
+.menu-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 66vh;
+}
+</style>

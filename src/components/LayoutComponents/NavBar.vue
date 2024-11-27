@@ -93,11 +93,17 @@
           <span>Inicio</span>
         </router-link>
       </div>
-      <div class="containerOption">
-        <router-link to="/account" class="nav-icon" aria-label="Cuenta">
-          <i class="fas fa-user"></i>
-          <span>Cuenta</span>
-        </router-link>
+      <div class="containerOption" >
+        <a href="#" @click.prevent="goToTickets" class="nav-icon" aria-label="Tickets">
+          <i class="fas fa-ticket"></i>
+          <span>Tickets</span>
+        </a>
+      </div>
+      <div class="containerOption" >
+        <a href="#" @click.prevent="goToReturnPanel" class="nav-icon" aria-label="Devoluciones">
+          <i class="fas fa-undo"></i>
+          <span>Devoluciones</span>
+        </a>
       </div>
       <div class="containerOption">
         <router-link to="/orders" class="nav-icon" aria-label="Pedidos">
