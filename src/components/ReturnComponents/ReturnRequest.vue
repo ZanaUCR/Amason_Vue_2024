@@ -1,4 +1,5 @@
 <template>
+  <div class="menu-view">
     <div class="return-request-container">
       <h2>Solicitar Devolución</h2>
       <form @submit.prevent="submitReturnRequest">
@@ -9,6 +10,7 @@
         <button type="submit" class="submit-button">Enviar Solicitud</button>
       </form>
     </div>
+  </div>
   </template>
   
   <script>
@@ -27,6 +29,10 @@
     },
     methods: {
       async submitReturnRequest() {
+        if (this.reason.length < 10) {
+      alert('La razón de la devolución debe tener al menos 10 caracteres.');
+      return;
+    }
         try {
           const response = await api.post('/order-return', {
             order_id: this.orderId,
@@ -35,7 +41,7 @@
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
           });
   
-          if (response.status === 200) {
+          if (response.status >= 200 && response.status < 300) {
             alert('Solicitud de devolución enviada con éxito.');
             this.$router.push({ name: 'OrdersList' }); 
           }
@@ -76,5 +82,10 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+ .menu-view {
+    display: flex;
+    flex-direction: column;
+    min-height: 66vh;
   }
   </style>

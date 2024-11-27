@@ -1,4 +1,11 @@
 <template>
+  <div class="menu-view">
+    <div class="header-container">
+      <h2>Mis Órdenes</h2>
+    </div>
+    <div v-if="loading" class="loading-indicator">
+      <p>Cargando órdenes...</p>
+    </div>
     <div class="task-list-container">
       <div class="task-item" v-for="(order, index) in orders" :key="index">
         <div class="task-header">
@@ -14,14 +21,17 @@
             <span class="time">{{ new Date(order.created_at).toLocaleString() }}</span>
           </div>
           <div class="task-options">
-            <button class="options-button">⋮</button>
-            <button v-if="order.status === 2" @click="requestReturn(order.order_id)" class="return-button">
+            <button class="options-button" @click="toggleMenu(index)">⋮</button>
+            <div v-if="order.showMenu" class="dropdown-menu">
+            <button v-if="order.status === 2" @click="requestReturn(order.order_id)" class="dropdown-item">
             Solicitar Devolución
           </button>
+        </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </template>
   
   <script>
@@ -30,7 +40,8 @@
   export default {
     data() {
       return {
-        orders: []  
+        orders: [],  
+        loading: false,
       }
     },
   
@@ -57,6 +68,9 @@
               if (order.status === 3) {
                 order.statusText = 'Cancelada';
               }
+              if (order.status === 4) {
+                order.statusText = 'Devolución Solicitada';
+              }
               return order;
             });
           }
@@ -69,6 +83,9 @@
           return false;
         }
       },
+      toggleMenu(index) {
+      this.orders[index].showMenu = !this.orders[index].showMenu;
+    },
     requestReturn(orderId) {
       // Redirigir a la vista ReturnRequestView con el ID de la orden
       this.$router.push({ name: 'ReturnRequestView', params: { orderId } });
@@ -85,7 +102,12 @@
   font-family: Arial, sans-serif;
   color: #333;
 }
-
+.loading-indicator {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin: 20px 0;
+}
 .task-item {
   display: flex;
   flex-direction: column;
@@ -147,6 +169,11 @@
   font-size: 12px;
   color: #000;
 }
+.header h2 {
+    font-size: 2rem;
+    color: #34495e;
+    margin-bottom: 10px;
+  }
 
 .options-button {
   border: none;
@@ -155,14 +182,49 @@
   cursor: pointer;
   color: #f1a80b;
 }
-.return-button {
-  margin-top: 10px;
-  padding: 5px 10px;
+
+.dropdown-menu {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
   background-color: #f1a80b;
   color: #fff;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  display: block;
+  text-align: left;
+  width: 100%;
 }
 
+.dropdown-item:hover {
+  background-color: #e09b0a;
+}
+.menu-view {
+  
+  flex-direction: column;
+  min-height: 66vh;
+}
+.header-container {
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
+  padding: 20px; /* Espaciado alrededor del texto */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-bottom: 20px; /* Espacio debajo del contenedor */
+}
+
+.header-container h2 {
+  font-size: 2rem; /* Tamaño de fuente */
+  color: #34495e; /* Color del texto */
+  margin: 0; /* Elimina el margen por defecto */
+}
 </style>

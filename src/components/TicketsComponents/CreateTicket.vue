@@ -1,21 +1,22 @@
 <template>
-    <div class="page-wrapper">
+  <div class="page-wrapper">
     <div class="background"></div>
     <div class="ticket-container">
       <h2 class="form-title">Crear Nuevo Ticket</h2>
       <form @submit.prevent="submitTicket" class="ticket-form">
-       
+        <!-- Formulario solo se muestra si se ha seleccionado una orden -->
         <div class="form-group">
           <label for="order-package">Orden o Paquete</label>
-          <select v-model="ticket.orderPackage" class="form-input" required>
+          <select v-model="ticket.orderPackage" class="form-input" required v-if="orders.length > 0">
             <option value="" disabled selected>Selecciona una opción</option>
-            <option value="Orden 1">Orden 1</option>
-            <option value="Orden 2">Orden 2</option>
-            <option value="Paquete A">Paquete A</option>
-            <option value="Paquete B">Paquete B</option>
+            <option v-for="order in orders" :key="order.id" :value="order.order_id">
+              Orden: {{ order.order_id }}
+            </option>
           </select>
+          <p v-else>Cargando órdenes...</p>
         </div>
-  
+
+        <!-- Resto del formulario -->
         <div class="form-group">
           <label for="category">Tipo de Reclamo</label>
           <select v-model="ticket.category" class="form-input" required>
@@ -26,17 +27,17 @@
             <option value="Otro">Otro</option>
           </select>
         </div>
-  
+
         <div class="form-group">
           <label for="subject">Asunto</label>
           <input type="text" v-model="ticket.subject" class="form-input" required placeholder="Escribe el asunto" />
         </div>
-  
+
         <div class="form-group">
           <label for="description">Descripción</label>
           <textarea v-model="ticket.description" class="form-input" required placeholder="Describe el problema..."></textarea>
         </div>
-  
+
         <div class="form-group">
           <label>Subir Fotos/Archivos</label>
           <div v-for="index in 1" :key="index" class="file-upload">
@@ -44,7 +45,7 @@
             <span>No hay archivo seleccionado</span>
           </div>
         </div>
-  
+
         <div class="form-group notification">
           <label>Notificarme por:</label>
           <div class="notification-options">
@@ -55,15 +56,14 @@
               <input type="checkbox" v-model="ticket.notifySMS" /> Mensaje de texto
             </label>
           </div>
-          <input v-if="ticket.notifySMS" type="texto" v-model="ticket.phoneNumber" class="form-input" placeholder="Número de teléfono (ej. 6098 8877)" />
+          <input v-if="ticket.notifySMS" type="text" v-model="ticket.phoneNumber" class="form-input" placeholder="Número de teléfono (ej. 6098 8877)" />
         </div>
-  
+
         <button type="submit" class="btn-submit">Crear Ticket</button>
       </form>
     </div>
   </div>
 </template>
-
 <script>
 import apiClient from '../../../services/api'
 import NavBar from '@/components/LayoutComponents/NavBar.vue';
@@ -82,10 +82,26 @@ export default {
         notifySMS: false,
         phoneNumber: '',
         files: Array(5).fill(null)
-      }
+      },
+      orders: [],
     };
   },
   methods: {
+    async fetchOrders() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token de autorización no encontrado');
+        }
+        const response = await apiClient.get('/orders/user-history', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        console.log('Datos de órdenes:', response.data); // Añade este log
+        this.orders = response.data; // Asegúrate de que 'orders' es el campo correcto
+      } catch (error) {
+        console.error('Error al obtener las órdenes:', error.response);
+      }
+    },
     handleFileUpload(index) {
       const input = event.target;
       if (input.files.length > 0) {
@@ -125,11 +141,17 @@ export default {
         });
 
         console.log('Ticket creado:', response.data);
+        this.$router.push('/tickets');
       } catch (error) {
         console.error('Error creando el ticket:', error.response);
       }
+    
+  },
+},
+    
+    async mounted() {
+      await this.fetchOrders(); // Llamar al método cuando el componente se monte
     }
-  }
 };
 </script>
 <style scoped>
