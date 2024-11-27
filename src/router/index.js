@@ -114,6 +114,12 @@ const router = createRouter({
             path: '/orders',
             name: 'OrdersList',
             component: OrdersList,
+          },
+          {
+            path: '/product-reviews/:id',
+            name: 'ProductReviews',
+            component: ReviewRatingsView,
+            props: true
           }
         ],
         
