@@ -1,5 +1,5 @@
 <template>
-  <div class="product-container">
+  <div class="product-container" @click="goToReviews">
     <img
   :src="product.product_image ? product.product_image : 'https://via.placeholder.com/150'"
   :alt="product.product_name"
@@ -13,7 +13,6 @@
           ₡ {{ product.product_price.toFixed(2) }}
         </p>
     <div class="price-container">
-        <!-- Mostrar el precio original si hay descuento -->
         
         <p class="price">
           ₡ {{ discountedPrice.toFixed(2) }}
@@ -63,7 +62,18 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addProductToCart']),
-
+    goToReviews() {
+      this.$router.push({
+      name: 'ProductReviews',
+      params: {
+        id: this.product.product_id
+      },
+      query: {
+        price: this.product.product_price,
+        name: this.product.product_name
+      }
+    });
+    },
     async addProduct(product) {
       this.isAdding = true; 
       try {
